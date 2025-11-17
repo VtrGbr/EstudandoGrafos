@@ -7,7 +7,7 @@ Grafo* criarGrafo(){
 
     for( int i = 0; i <= MAX - 1; i++){
         grafo->vertices[i] = NULL;
-        grafo->visitado[i] = 0;
+        //grafo->visitado[i] = 0;
     }
 
     return grafo;

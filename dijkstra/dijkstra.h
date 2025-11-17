@@ -14,7 +14,7 @@ typedef struct listaAdjacencia{
 
 typedef struct grafo{
     ListaAdjacencia *vertices[MAX];
-    int visitado[MAX];
+    //int visitado[MAX];
 }Grafo;
 
 Grafo* criarGrafo();
