@@ -82,6 +82,13 @@ Utilizarei a linguagem C para realizar o estudo e exercícios desses algorítmos
     }
 
 ```
+- Exercícios:
+    Nesta pasta contém alguns exercícios simples sobre cada grafo da pasta.
+    Para roda-los, digite este comando no terminal
+```bash
+    gcc cidadeViavel.c ../dijkstra.c -I../ -o "nomeExecutavel"
+```
+
 2. Bellman-Ford:
 
 - Objetivo: Encontrar o menor caminho entre um grafo ponderado. Entretando ele aceita pesos negativos. Quando encontra um ciclo negativo ele para, pois isso pode alterar o valor das distâncias de cada vértice e o programa pode rodar mais tempo que o necessário.

@@ -7,7 +7,7 @@ int main(){
     int qtdCidades,inicio, final, pesoTotal = 0, tamanhoCaminho = 0;
     int vertice1, vertice2, peso;   
     
-    printf("Digite quantas cidades há para serem percorridas: (elas devem ser até %d)",MAX - 1);
+    printf("Digite quantas cidades há para serem percorridas (elas devem ser até %d): ",MAX - 1);
     scanf("%d",&qtdCidades);
 
     while( qtdCidades > MAX - 1){
@@ -20,6 +20,7 @@ int main(){
         printf("Vertice%d: ",i+1);
         scanf("%d",&vertice1);
         printf("Vertice%d: ",i+2);
+        scanf("%d",&vertice2);
         printf("Peso:");
         scanf("%d",&peso);
 
