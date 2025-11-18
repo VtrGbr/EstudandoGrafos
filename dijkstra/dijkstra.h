@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define MAX 7 
+#define MAX 20 
 typedef struct listaAdjacencia{
     int valor;
     int peso;
