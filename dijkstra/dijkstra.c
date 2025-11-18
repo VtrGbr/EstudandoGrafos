@@ -2,10 +2,12 @@
 
 //Criar o grafico
 
-Grafo* criarGrafo(){
+Grafo* criarGrafo(int n){
     Grafo* grafo = (Grafo*)malloc(sizeof(Grafo));
+    grafo->numVertices = n;
 
-    for( int i = 0; i <= MAX - 1; i++){
+    grafo->vertices = (ListaAdjacencia**)malloc(n * sizeof(ListaAdjacencia*));
+    for( int i = 0; i <= n - 1; i++){
         grafo->vertices[i] = NULL;
         //grafo->visitado[i] = 0;
     }
@@ -15,17 +17,20 @@ Grafo* criarGrafo(){
 
 //Adicionar relação entre os grafos 
 
-void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso){
+void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso, int direcionado){
     ListaAdjacencia* no1 = criarListaAdjacencia(vertex2);
     no1->peso = peso;
     no1->next = grafo->vertices[vertex1];
     grafo->vertices[vertex1] = no1;
 
     // Adiciona aresta de v2 para v1 (grafo não-direcionado)
-    ListaAdjacencia* no2 = criarListaAdjacencia(vertex1);
-    no2->peso = peso;
-    no2->next = grafo->vertices[vertex2];
-    grafo->vertices[vertex2] = no2;
+    if( direcionado = 1){
+        ListaAdjacencia* no2 = criarListaAdjacencia(vertex1);
+        no2->peso = peso;
+        no2->next = grafo->vertices[vertex2];
+        grafo->vertices[vertex2] = no2;
+
+    }
 
 }
 
@@ -42,11 +47,12 @@ ListaAdjacencia* criarListaAdjacencia(int valor){
 
     return lista;
 }
-int encontrarMenorDistancia(int dist[], int visitado[]) {
+
+int encontrarMenorDistancia(int tamanhoGrafo,int dist[], int visitado[]) {
     int min = INT_MAX;
     int min_index = -1; // -1 indica que não encontrou
 
-    for (int v = 0; v < MAX; v++) {
+    for (int v = 0; v < tamanhoGrafo; v++) {
         if (visitado[v] == 0 && dist[v] < min) {
             min = dist[v];
             min_index = v;
@@ -56,15 +62,18 @@ int encontrarMenorDistancia(int dist[], int visitado[]) {
 }
 //Menor caminho com peso (retornarei o array de inteiros do menor caminho)
 
+
+
 int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, int* tamanhoCaminho) {
     
-    // 1. Estruturas de Dados do Algoritmo
-    int dist[MAX];     // Armazena a menor distância de 'inicio' até 'i'
-    int anterior[MAX]; // Armazena o nó anterior no caminho mais curto
-    int visitado[MAX]; // Array local de visitados (não mexe no grafo)
+    int tamanhoGrafo = grafo->numVertices;
 
+    // 1. Estruturas de Dados do Algoritmo
+    int dist[tamanhoGrafo];     // Armazena a menor distância de 'inicio' até 'i'
+    int anterior[tamanhoGrafo]; // Armazena o nó anterior no caminho mais curto
+    int visitado[tamanhoGrafo]; // Array local de visitados (não mexe no grafo)
     // 2. Inicialização
-    for (int i = 0; i < MAX; i++) {
+    for (int i = 0; i < tamanhoGrafo; i++) {
         dist[i] = INT_MAX;
         anterior[i] = -1; // -1 significa sem predecessor
         visitado[i] = 0;  // 0 significa não visitado
@@ -75,10 +84,10 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
 
     // 3. Loop Principal do Dijkstra
     // Vamos iterar no máximo MAX-1 vezes
-    for (int count = 0; count < MAX - 1; count++) {
+    for (int count = 0; count < tamanhoGrafo - 1; count++) {
         
         // Pega o vértice não visitado com menor distância
-        int u = encontrarMenorDistancia(dist, visitado);
+        int u = encontrarMenorDistancia(tamanhoGrafo,dist, visitado);
 
         // Se não achou (grafo desconexo) ou chegou no destino
         if (u == -1) {
@@ -126,7 +135,7 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
 
     // Agora, vamos reconstruir o caminho usando o array 'anterior'
     // O caminho virá *invertido* (do destino para a origem)
-    int* caminhoInvertido = (int*)malloc(MAX * sizeof(int));
+    int* caminhoInvertido = (int*)malloc(tamanhoGrafo * sizeof(int));
     int i = 0;
     int atual = destinoFinal;
 
@@ -155,7 +164,7 @@ void liberarGrafo(Grafo* grafo) {
         return;
     }
 
-    for (int i = 0; i < MAX; i++) {
+    for (int i = 0; i < grafo->numVertices; i++) {
         ListaAdjacencia* atual = grafo->vertices[i];
         while (atual != NULL) {
             ListaAdjacencia* temp = atual;

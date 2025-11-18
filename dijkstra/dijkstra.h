@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#define MAX 20 
+//#define MAX 20 
 typedef struct listaAdjacencia{
     int valor;
     int peso;
@@ -13,16 +13,17 @@ typedef struct listaAdjacencia{
 }ListaAdjacencia;
 
 typedef struct grafo{
-    ListaAdjacencia *vertices[MAX];
+    ListaAdjacencia **vertices;
+    int numVertices;
     //int visitado[MAX];
 }Grafo;
 
-Grafo* criarGrafo();
+Grafo* criarGrafo(int n);
 
 //Adicionar relação entre os grafos 
 
-void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso);
-int encontrarMenorDistancia(int dist[], int visitado[]);
+void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso, int direcionado);
+int encontrarMenorDistancia(int tamanhoGrafo,int dist[], int visitado[]);
 ListaAdjacencia* criarListaAdjacencia(int valor);
 
 int* menorCaminho(Grafo* grafo, int inicio,int destinoFinal,int *pesoTotal,int *tamanhoCaminho);
