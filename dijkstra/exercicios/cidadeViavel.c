@@ -1,107 +1,109 @@
 #include "dijkstra.h"
 #include <string.h>
-/*Saber o menor caminho de uma cidade a outra e quantos quilometros foram percorridos*/
+
+
 typedef struct cidade{
     char nome[50];
-    int população;
-}Cidade;
+    int populacao; 
+} Cidade;
 
 void lerCidade(Cidade* city, int qtdCidades){
     for( int i = 0; i < qtdCidades; i++){
-        printf("Digite o nome da cidade%d: ",i+1);
+        printf("\n--- Cadastro da Cidade %d ---\n", i);
+        printf("Nome: ");
+        
         scanf(" %[^\n]", city[i].nome);
 
-        printf("cep: ");
-        scanf("%d",&city[i].população);
+        printf("População: "); 
+        scanf("%d", &city[i].populacao);
     }
 }
-//Retorna o vertice da cidade correspondente
 
 int verticeCidade(Cidade* city, char* nomeCidade, int tamanhoCidade){
-
     for( int i = 0; i < tamanhoCidade; i++){
-        if(strcmp(city[i].nome,nomeCidade) == 0){
+        if(strcmp(city[i].nome, nomeCidade) == 0){
             return i;
         }
     }
-
     return -1;
-
 }
 
 int main(){
-    int tamanhoGrafo,inicio, final, pesoTotal = 0, tamanhoCaminho = 0;
+    int numCidades, numArestas;
+    int inicio, final, pesoTotal = 0, tamanhoCaminho = 0;
     int vertice1, vertice2, peso;
-    char cidadeA[50],cidadeB[50];   
+    char nomeCidadeA[50], nomeCidadeB[50];   
     
-    printf("Tamanho do grafo:  ");
-    scanf("%d",&tamanhoGrafo);
-   /*
-    printf("Digite quantas cidades há para serem percorridas (elas devem ser até %d): ",tamanhoGrafo - 1);
-    scanf("%d",&qtdCidades);
+    printf("Quantidade de cidades (vertices): ");
+    scanf("%d", &numCidades);
 
-    while( qtdCidades > tamanhoGrafo - 1){
-        printf("A quantidade de cidades excedeu o limite de vertices, tente novamente");
+    // Cria o grafo com o tamanho exato
+    Grafo* grafo = criarGrafo(numCidades);
+    Cidade citys[numCidades];
 
-        scanf("%d",&qtdCidades);
-    }
-    */
-    Grafo* grafo = criarGrafo(tamanhoGrafo + 1);
-    Cidade citys[tamanhoGrafo];
+    lerCidade(citys, numCidades);
 
-    lerCidade(citys,tamanhoGrafo);
+    //Perguntar quantas estradas existem separadamente
+    printf("\nQuantas estradas (conexoes) existem entre as cidades? ");
+    scanf("%d", &numArestas);
 
+    for( int i = 0; i < numArestas; i++){
+        printf("\n--- Conexão %d ---\n", i+1);
+        printf("Cidade de Origem: ");
+        scanf(" %[^\n]", nomeCidadeA);
+        
+        printf("Cidade de Destino: ");
+        scanf(" %[^\n]", nomeCidadeB);
+        
+        printf("Distância (Peso em Km): ");
+        scanf("%d", &peso);
 
-    for( int i = 0; i < tamanhoGrafo;i++){
-        printf("Cidade %d: ",i);
-        scanf(" %[^\n]", &cidadeA[i]);
-        printf("Cidade %d: ",i+1);
-        scanf(" %[^\n]", &cidadeB[i]);
-        printf("Peso:");
-        scanf("%d",&peso);
+        vertice1 = verticeCidade(citys, nomeCidadeA, numCidades);
+        vertice2 = verticeCidade(citys, nomeCidadeB, numCidades);
 
-        vertice1 = verticeCidade(citys,cidadeA,tamanhoGrafo);
-        vertice2 = verticeCidade(citys,cidadeB,tamanhoGrafo);
-
-        if( vertice1 < 0 || vertice1 >= tamanhoGrafo || vertice2 < 0 || vertice2 >= tamanhoGrafo){
-            printf("--- Erro: Vértices devem estar entre 0 e %d. Aresta ignorada. ---\n", tamanhoGrafo - 1);
-        }else{
-            adicionarAresta(grafo,vertice1,vertice2,peso,1);
+        if( vertice1 == -1 || vertice2 == -1){
+            printf("Erro: Uma das cidades não foi encontrada. Tente novamente.\n");
+            i--; // Decrementa para repetir a iteração
+        } else {
+            adicionarAresta(grafo, vertice1, vertice2, peso, 1);
         }
     }
 
     int *caminho;
 
-    printf("Digite o inicio e o fim ( ex: 1 5): ");
-    scanf("%d %d", &inicio, &final);
+    // CORREÇÃO 2: Ler nomes em vez de índices numéricos
+    printf("\n--- Calcular Rota ---\n");
+    printf("Digite o nome da cidade de INICIO: ");
+    scanf(" %[^\n]", nomeCidadeA);
+    
+    printf("Digite o nome da cidade de DESTINO: ");
+    scanf(" %[^\n]", nomeCidadeB);
 
-    // Validação de Início/Fim (Correção 1 e 4)
-    if (inicio < 0 || inicio >= tamanhoGrafo || final < 0 || final >= tamanhoGrafo) {
-        printf("Erro: Vértices de início e fim devem estar entre 0 e %d.\n", tamanhoGrafo - 1);
+    inicio = verticeCidade(citys, nomeCidadeA, numCidades);
+    final = verticeCidade(citys, nomeCidadeB, numCidades);
+
+    if (inicio == -1 || final == -1) {
+        printf("Erro: Cidades de início ou fim inválidas.\n");
     } else {
         caminho = menorCaminho(grafo, inicio, final, &pesoTotal, &tamanhoCaminho);
 
         if (caminho != NULL) {
-        printf("Rota Otimizada:\n");
-        
-        for (int i = 0; i < tamanhoCaminho; i++) {
-                int idVertice = caminho[i]; // Pega o ID numérico (ex: 0)
+            printf("\n=== Rota Otimizada ===\n");
+            
+            for (int i = 0; i < tamanhoCaminho; i++) {
+                int idVertice = caminho[i];
                 
-                // ACESSA O DADO GENÉRICO USANDO O ID
-                printf("%s ", citys[idVertice].nome); 
-                printf("População: %d habitantes", citys[idVertice].população); 
+                printf("%s (Pop: %d)", citys[idVertice].nome, citys[idVertice].populacao);
                 
                 if (i < tamanhoCaminho - 1) printf(" -> ");
             }
-            printf("\nDistância total: %d km\n", pesoTotal);
-    
+            printf("\n\nDistância total: %d km\n", pesoTotal);
             free(caminho);
         } else {
-            printf("Não foi encontrado caminho entre %d e %d.\n", inicio, final);
+            printf("\nNão existe caminho possível entre %s e %s.\n", nomeCidadeA, nomeCidadeB);
         }
     }
 
     liberarGrafo(grafo);
     return 0;
 }
-
