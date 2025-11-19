@@ -22,7 +22,7 @@ void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso, int direc
     grafo->vertices[vertex1] = no1;
 
     // Adiciona aresta de v2 para v1 (grafo não-direcionado)
-    if( direcionado = 1){
+    if( direcionado == 0){
         ListaAdjacencia* no2 = criarListaAdjacencia(vertex1);
         no2->peso = peso;
         no2->next = grafo->vertices[vertex2];

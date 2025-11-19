@@ -65,7 +65,7 @@ int main(){
             printf("Erro: Uma das cidades não foi encontrada. Tente novamente.\n");
             i--; // Decrementa para repetir a iteração
         } else {
-            adicionarAresta(grafo, vertice1, vertice2, peso, 1);
+            adicionarAresta(grafo, vertice1, vertice2, peso, 0);
         }
     }
 

@@ -84,9 +84,19 @@ Utilizarei a linguagem C para realizar o estudo e exercícios desses algorítmos
 ```
 - Exercícios:
     Nesta pasta contém alguns exercícios simples sobre cada grafo da pasta.
-    Para roda-los, digite este comando no terminal
+    Para roda-los, digite este comando no 
+
+1. Cidade Viável: Neste exercício o objetivo é encontrar o menor caminho de uma cidade até outra
+Como rodar: 
 ```bash
-    gcc cidadeViavel.c ../dijkstra.c -I../ -o "nomeExecutavel"
+    gcc cidadeViavel.c ../dijkstra.c ../../grafo.c -I../ -I../../ -o "nomeExecutavel"
+```
+
+2. Circuito elétrico: O objetivo é encontrar o menor caminho que uma corrente elétrica percorre em um circuito:
+Como rodar:
+
+```bash
+    gcc circuitoEletrico.c ../dijkstra.c ../../grafo.c -I../ -I../../ -o "nomeExecutavel"
 ```
 
 2. Bellman-Ford:
