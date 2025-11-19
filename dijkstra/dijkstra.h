@@ -1,32 +1,12 @@
 #ifndef dijkstra_h
 #define dijkstra_h
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
+#include "grafo.h"
 
-//#define MAX 20 
-typedef struct listaAdjacencia{
-    int valor;
-    int peso;
-    struct listaAdjacencia* next;
-}ListaAdjacencia;
-
-typedef struct grafo{
-    ListaAdjacencia **vertices;
-    int numVertices;
-    //int visitado[MAX];
-}Grafo;
-
-Grafo* criarGrafo(int n);
-
-//Adicionar relação entre os grafos 
-
-void adicionarAresta(Grafo* grafo, int vertex1, int vertex2, int peso, int direcionado);
+//Função responsável por retornar qual vertice iremos analisar
 int encontrarMenorDistancia(int tamanhoGrafo,int dist[], int visitado[]);
-ListaAdjacencia* criarListaAdjacencia(int valor);
 
+//Função principal. Retorna um vetor de interios com o menor caminho
 int* menorCaminho(Grafo* grafo, int inicio,int destinoFinal,int *pesoTotal,int *tamanhoCaminho);
 
-void liberarGrafo(Grafo* grafo);
 #endif

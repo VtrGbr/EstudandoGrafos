@@ -1,9 +1,9 @@
 #include "dijkstra.h"
-
+#include <string.h>
 /*Saber o menor caminho de uma cidade a outra e quantos quilometros foram percorridos*/
 typedef struct cidade{
     char nome[50];
-    int cep;
+    int população;
 }Cidade;
 
 void lerCidade(Cidade* city, int qtdCidades){
@@ -12,13 +12,27 @@ void lerCidade(Cidade* city, int qtdCidades){
         scanf(" %[^\n]", city[i].nome);
 
         printf("cep: ");
-        scanf("%d",&city[i].cep);
+        scanf("%d",&city[i].população);
     }
+}
+//Retorna o vertice da cidade correspondente
+
+int verticeCidade(Cidade* city, char* nomeCidade, int tamanhoCidade){
+
+    for( int i = 0; i < tamanhoCidade; i++){
+        if(strcmp(city[i].nome,nomeCidade) == 0){
+            return i;
+        }
+    }
+
+    return -1;
+
 }
 
 int main(){
     int tamanhoGrafo,inicio, final, pesoTotal = 0, tamanhoCaminho = 0;
-    int vertice1, vertice2, peso;   
+    int vertice1, vertice2, peso;
+    char cidadeA[50],cidadeB[50];   
     
     printf("Tamanho do grafo:  ");
     scanf("%d",&tamanhoGrafo);
@@ -39,12 +53,15 @@ int main(){
 
 
     for( int i = 0; i < tamanhoGrafo;i++){
-        printf("Vertice%d: ",i+1);
-        scanf("%d",&vertice1);
-        printf("Vertice%d: ",i+2);
-        scanf("%d",&vertice2);
+        printf("Cidade %d: ",i);
+        scanf(" %[^\n]", &cidadeA[i]);
+        printf("Cidade %d: ",i+1);
+        scanf(" %[^\n]", &cidadeB[i]);
         printf("Peso:");
         scanf("%d",&peso);
+
+        vertice1 = verticeCidade(citys,cidadeA,tamanhoGrafo);
+        vertice2 = verticeCidade(citys,cidadeB,tamanhoGrafo);
 
         if( vertice1 < 0 || vertice1 >= tamanhoGrafo || vertice2 < 0 || vertice2 >= tamanhoGrafo){
             printf("--- Erro: Vértices devem estar entre 0 e %d. Aresta ignorada. ---\n", tamanhoGrafo - 1);
@@ -72,7 +89,7 @@ int main(){
                 
                 // ACESSA O DADO GENÉRICO USANDO O ID
                 printf("%s ", citys[idVertice].nome); 
-                printf("Cep: %d", citys[idVertice].cep); 
+                printf("População: %d habitantes", citys[idVertice].população); 
                 
                 if (i < tamanhoCaminho - 1) printf(" -> ");
             }

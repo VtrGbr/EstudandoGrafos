@@ -1,49 +1,15 @@
 #include "bellmanFord.h"
 
-Grafo* criarGrafo(){
-    Grafo* grafo = (Grafo*)malloc(sizeof(Grafo));
-
-    for( int i = 0; i <= MAX - 1; i++){
-        grafo->vertices[i] = NULL;
-    }
-
-    return grafo;
-}
-
-//Adicionar relação entre os grafos (grafo direcionado) 
-
-void adicionarAresta(Grafo* grafo, int origem, int destino, int peso){
-    ListaAdjacencia* no1 = criarListaAdjacencia(destino);
-    no1->peso = peso;
-    no1->next = grafo->vertices[origem];
-    grafo->vertices[origem] = no1;
-
-}
-
-
-ListaAdjacencia* criarListaAdjacencia(int valor){
-    ListaAdjacencia* lista = (ListaAdjacencia*)malloc(sizeof(ListaAdjacencia));
-
-    if(lista == NULL){
-        return NULL;
-    }
-    lista->valor = valor;
-    lista->peso = 0;
-    lista->next= NULL;
-
-    return lista;
-}
-
 
 int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, int* tamanhoCaminho) {
-    
+    int tamanhoGrafo = grafo->numVertices; 
     // 1. Estruturas de Dados do Algoritmo
-    int dist[MAX];     // Armazena a menor distância de 'inicio' até 'i'
-    int anterior[MAX]; // Armazena o nó anterior no caminho mais curto
+    int dist[tamanhoGrafo];     // Armazena a menor distância de 'inicio' até 'i'
+    int anterior[tamanhoGrafo]; // Armazena o nó anterior no caminho mais curto
     
 
     // 2. Inicialização
-    for (int i = 0; i < MAX; i++) {
+    for (int i = 0; i < tamanhoGrafo; i++) {
         dist[i] = INT_MAX;
         anterior[i] = -1; // -1 significa sem predecessor
         
@@ -54,9 +20,9 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
 
     // 3. Loop Principal do Dijkstra
     // Vamos iterar no máximo MAX-1 vezes
-    for (int i = 0; i <= MAX - 1; i++) {
+    for (int i = 0; i <= tamanhoGrafo - 1; i++) {
         
-        for( int u = 0; u < MAX; u++){
+        for( int u = 0; u < tamanhoGrafo; u++){
             if(dist[u] == INT_MAX) continue;
             // 4. "Relaxamento" (Relaxation)
             // Itera sobre todos os vizinhos 'v' de 'u'
@@ -78,7 +44,7 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
         }
     }
         //Irei verificar se há ciclos negativos
-        for (int u = 0; u < MAX ;u++){
+        for (int u = 0; u < tamanhoGrafo ;u++){
             if( dist[u] == INT_MAX) continue;
     
             ListaAdjacencia* lista = grafo->vertices[u];
@@ -117,11 +83,11 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
 
     // Agora, vamos reconstruir o caminho usando o array 'anterior'
     // O caminho virá *invertido* (do destino para a origem)
-    int* caminhoInvertido = (int*)malloc(MAX * sizeof(int));
+    int* caminhoInvertido = (int*)malloc(tamanhoGrafo * sizeof(int));
     int i = 0, count = 0;
     int atual = destinoFinal;
 
-    while (atual != -1 && count < MAX) {
+    while (atual != -1 && count < tamanhoGrafo) {
         caminhoInvertido[i] = atual;
         i++;
         atual = anterior[atual];
@@ -141,19 +107,3 @@ int* menorCaminho(Grafo* grafo, int inicio, int destinoFinal, int* pesoTotal, in
     return caminhoFinal; // Retorna o caminho na ordem correta
 }
 
-
-void liberarGrafo(Grafo* grafo) {
-    if (grafo == NULL) {
-        return;
-    }
-
-    for (int i = 0; i < MAX; i++) {
-        ListaAdjacencia* atual = grafo->vertices[i];
-        while (atual != NULL) {
-            ListaAdjacencia* temp = atual;
-            atual = atual->next;
-            free(temp); // Libera cada nó da lista
-        }
-    }
-    free(grafo); // Libera a struct principal do grafo
-}
